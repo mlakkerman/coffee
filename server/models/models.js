@@ -8,21 +8,11 @@ const User = sequelize.define('user', {
     role: { type: DataTypes.STRING, defaultValue: "USER" },
 })
 
-const Events = sequelize.define('events', {
+const Products = sequelize.define('products', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
     img: { type: DataTypes.STRING, allowNull: false },
-    date: { type: DataTypes.DATE},
-})
-
-const Address = sequelize.define('address', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    region: { type: DataTypes.STRING, allowNull: false },
-    city: { type: DataTypes.STRING, allowNull: false },
-    street: { type: DataTypes.STRING, allowNull: false },
-    house: { type: DataTypes.STRING, allowNull: false },
-    appartament: { type: DataTypes.STRING},
 })
 
 const Review = sequelize.define('review', {
@@ -31,31 +21,16 @@ const Review = sequelize.define('review', {
     description: { type: DataTypes.STRING, allowNull: false },
 })
 
-const Sponsors = sequelize.define('sponsors', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
-    logo: { type: DataTypes.STRING, allowNull: false },
-    websiteUrl: { type: DataTypes.STRING, allowNull: false },
-})
-
-const Speakers = sequelize.define('speakers', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    surname: { type: DataTypes.STRING, allowNull: false },
-    name: { type: DataTypes.STRING, allowNull: false },
-    patronymic: { type: DataTypes.STRING},
-    bio: { type: DataTypes.STRING },
-})
-
 const Categories = sequelize.define('categories', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
 })
 
-const Favorites = sequelize.define('favorites', {
+const ProductBasket = sequelize.define('product_basket', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 })
 
-const EventInfo = sequelize.define('event_info', {
+const ProductInfo = sequelize.define('product_info', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING, allowNull: false },
@@ -64,37 +39,25 @@ const EventInfo = sequelize.define('event_info', {
 User.hasMany(Review)
 Review.belongsTo(User)
 
-Events.hasMany(Review)
-Review.belongsTo(Events);
+Products.hasMany(Review) // Events = Products
+Review.belongsTo(Products);
 
-Address.hasOne(Events);
-Events.belongsTo(Address);
+Categories.hasOne(Products);
+Products.belongsTo(Categories);
 
-Sponsors.hasMany(Events);
-Events.belongsTo(Sponsors);
+Products.hasMany(ProductInfo, {as: 'info'});
+ProductInfo.belongsTo(Products)
 
-Categories.hasOne(Events);
-Events.belongsTo(Categories);
-
-Events.hasMany(EventInfo, {as: 'info'});
-EventInfo.belongsTo(Events)
-
-Speakers.hasOne(Events);
-Events.belongsTo(Speakers);
-
-Events.belongsToMany(User, { through: Favorites });
-User.belongsToMany(Events, { through: Favorites });
+Products.belongsToMany(User, { through: ProductBasket });
+User.belongsToMany(Products, { through: ProductBasket });
 
 module.exports = {
     User,
-    Events,
-    Address,
+    Products,
     Review,
-    Sponsors,
-    Speakers,
     Categories,
-    Favorites,
-    EventInfo
+    ProductBasket,
+    ProductInfo
 }
 
 // const Basket = sequelize.define('basket', {

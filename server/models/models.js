@@ -8,6 +8,10 @@ const User = sequelize.define('user', {
     role: { type: DataTypes.STRING, defaultValue: "USER" },
 })
 
+const Basket = sequelize.define('basket', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+})
+
 const Products = sequelize.define('products', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
@@ -39,7 +43,10 @@ const ProductInfo = sequelize.define('product_info', {
 User.hasMany(Review)
 Review.belongsTo(User)
 
-Products.hasMany(Review) // Events = Products
+User.hasOne(Basket);
+Basket.belongsTo(User);
+
+Products.hasMany(Review)
 Review.belongsTo(Products);
 
 Categories.hasOne(Products);
@@ -48,8 +55,8 @@ Products.belongsTo(Categories);
 Products.hasMany(ProductInfo, {as: 'info'});
 ProductInfo.belongsTo(Products)
 
-Products.belongsToMany(User, { through: ProductBasket });
-User.belongsToMany(Products, { through: ProductBasket });
+Products.belongsToMany(Basket, { through: ProductBasket });
+Basket.belongsToMany(Products, { through: ProductBasket });
 
 module.exports = {
     User,
@@ -57,7 +64,8 @@ module.exports = {
     Review,
     Categories,
     ProductBasket,
-    ProductInfo
+    ProductInfo,
+    Basket,
 }
 
 // const Basket = sequelize.define('basket', {

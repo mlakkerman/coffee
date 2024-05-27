@@ -1,9 +1,12 @@
 import { makeAutoObservable } from "mobx";
 import { deleteProductFromAPI } from "../http/productAPI";
 import { fetchProducts } from "../http/productAPI";
+import { addProductToBasketAPI, fetchBasketAPI, removeProductFromBasketAPI } from "../http/basketAPI";
 export default class ProductStore {
     constructor() {
+        this._userId = localStorage.getItem('userId');
         this._categories = []
+        this._basket = []
         this._products = []
         this._selectedCategory = {}
         this._page = 1
@@ -22,7 +25,7 @@ export default class ProductStore {
         try {
             await deleteProductFromAPI(id);
             this._products = this._products.filter(product => product.id !== id);
-            this._totalCount--; 
+            this._totalCount--;
             if (this._products.length === 0 && this.page !== 1) {
                 this.setPage(this.page - 1);
                 await fetchProducts();
@@ -48,6 +51,36 @@ export default class ProductStore {
         this._totalCount = count
     }
 
+    async fetchBasket() {
+        try {
+            const data = await fetchBasketAPI(this._userId);
+            this._basket = data.data;
+        } catch (error) {
+            console.log('Fetch basket error:', error);
+        }
+    }
+
+    async addToBasket(productId) {
+        try {
+            await addProductToBasketAPI(productId, this._userId);
+            this.fetchBasket();
+        } catch (error) {
+            console.log('Add to basket error:', error);
+        }
+    }
+    
+    async removeFromBasket(productId) {
+        try {
+            await removeProductFromBasketAPI(productId, this._userId);
+            this.fetchBasket();
+        } catch (error) {
+            console.log('Remove from basket error:', error);
+        }
+    }     
+
+    get basket() {
+        return this._basket;
+    }
     get categories() {
         return this._categories
     }

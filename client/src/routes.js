@@ -1,8 +1,8 @@
 import Admin from "./pages/Admin";
-import {ADMIN_ROUTE, EVENT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, ALLEVENTS_ROUTE} from "./utils/consts";
-import AllEvents from "./pages/AllEvents";
+import {ADMIN_ROUTE, PRODUCT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, ALLPRODUCTS_ROUTE} from "./utils/consts";
 import Auth from "./pages/Auth";
-import EventsPage from "./pages/EventsPage";
+import ProductPage from "./pages/ProductPage";
+import AllProducts from "./pages/AllProducts";
 
 export const authRoutes = [
     {
@@ -13,8 +13,8 @@ export const authRoutes = [
 
 export const publicRoutes = [
     {
-        path: ALLEVENTS_ROUTE,
-        Component: AllEvents
+        path: ALLPRODUCTS_ROUTE,
+        Component: AllProducts
     },
     {
         path: LOGIN_ROUTE,
@@ -25,7 +25,7 @@ export const publicRoutes = [
         Component: Auth
     },
     {
-        path: EVENT_ROUTE + '/:id',
-        Component: EventsPage
+        path: PRODUCT_ROUTE + '/:id',
+        Component: ProductPage
     },
 ]

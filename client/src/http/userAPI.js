@@ -2,7 +2,7 @@ import {$authHost, $host} from "./index";
 import jwt_decode from "jwt-decode";
 
 export const registration = async (email, password, role) => {
-    const {data} = await $host.post('api/user/registration', {email, password, role})
+    const {data} = await $host.post('api/user/registration', {email, password, role: 'ADMIN'})
     localStorage.setItem('token', data.token)
     return jwt_decode(data.token)
 }
@@ -11,7 +11,7 @@ export const login = async (email, password) => {
     const {data} = await $host.post('api/user/login', {email, password})
     localStorage.setItem('token', data.token)
     let user = jwt_decode(data.token)
-    console.log(user); // просто добавьте эту строку
+    console.log(user); 
     return user  
 }
 

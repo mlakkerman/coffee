@@ -6,8 +6,14 @@ import ProductItem from "./ProductItem";
 
 const ProductList = observer(() => {
     const {product} = useContext(Context)
+    const productsFromContext = product?.products;
     const handleDeleteProduct = async (id) => {
         product.deleteProduct(id);
+    }
+    const finalProducts = product || productsFromContext;
+   
+    if (!finalProducts) {
+        return null;
     }
     return (
         <Row className="d-flex justify-content-center">
